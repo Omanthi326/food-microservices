@@ -95,8 +95,8 @@ services:
         condition: service_healthy
     environment:
       - PORT=3004
-      - STRIPE_SECRET_KEY=sk_test_51S5rdx2ZeAJz5mMCVE4QYbLm7kApxIgMYP0GxJJkyxKG4CTazRo2Y0S8zSVyXrMNHrHtdwsYXhahlysYKvXZojii00HLEdKUA5
-      - STRIPE_WEBHOOK_SECRET=whsec_464fe5e8f552eccb0b0d16f6d5ac843958315388380c5cc99d57eead52bec7e6
+      - STRIPE_SECRET_KEY=
+      - STRIPE_WEBHOOK_SECRET=
       - FRONTEND_URL=http://localhost:5173
       - ORDER_SERVICE_URL=http://order-service:3003
       - RABBITMQ_URL=amqp://admin:admin123@rabbitmq:5672
