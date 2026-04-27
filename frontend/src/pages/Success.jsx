@@ -18,7 +18,7 @@ const Success = () => {
         try {
             console.log('Saving order to database:', postData);
             
-            const response = await fetch('${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/order', {
+            const response = await fetch('https://api-gateway-production-8d60.up.railway.app/order', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

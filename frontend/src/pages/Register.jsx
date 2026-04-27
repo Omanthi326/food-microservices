@@ -41,7 +41,7 @@ const Register = () => {
                 }
             };
 
-            await axios.post('${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/auth/register',
+            await axios.post('https://api-gateway-production-8d60.up.railway.app/auth/register',
                 {
                     name: userData.name,
                     email: userData.email,

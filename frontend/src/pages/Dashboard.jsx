@@ -20,8 +20,8 @@ const Dashboard = () => {
 
         // Fetch both orders and food items
         Promise.all([
-            axios.get('${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/order'),
-            axios.get('${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/food')
+            axios.get('https://api-gateway-production-8d60.up.railway.app/order'),
+            axios.get('https://api-gateway-production-8d60.up.railway.app/food')
         ])
             .then(([ordersResponse, foodResponse]) => {
                 setOrders(ordersResponse.data);

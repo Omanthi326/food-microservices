@@ -14,7 +14,7 @@ const Admin = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get('${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/food')
+      .get('https://api-gateway-production-8d60.up.railway.app/food')
       .then((response) => {
         setFood(response.data.data);
         setLoading(false);

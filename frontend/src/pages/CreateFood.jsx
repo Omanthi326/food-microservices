@@ -51,7 +51,7 @@ const CreateFood = () => {
         data.append('file', img);
 
         try {
-            const uploadUrl = '${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/upload-image';
+            const uploadUrl = 'https://api-gateway-production-8d60.up.railway.app/upload-image';
             const res = await axios.post(uploadUrl, data, {
                 headers: {
                     'Authorization': `Bearer ${token}`

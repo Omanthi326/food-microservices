@@ -47,7 +47,7 @@ const Payment = () => {
   toast.loading('Processing payment...', { id: 'payment' });
 
   try {
-    const response = await fetch('${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/stripe/test-payment', {
+    const response = await fetch('https://api-gateway-production-8d60.up.railway.app/stripe/test-payment', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
