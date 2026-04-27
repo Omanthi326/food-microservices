@@ -114,7 +114,7 @@ const CreateFood = () => {
 
             console.log(import.meta.env.VITE_REACT_APP_BACKEND_BASEURL);
 
-            await axios.post(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/food`, formData, config);
+            await axios.post(`https://api-gateway-production-8d60.up.railway.app/food`, formData, config);
 
             toast.success('Food saved successfully');
             navigate('/admin');
