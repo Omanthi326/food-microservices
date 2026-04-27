@@ -27,9 +27,7 @@ npm-debug.log*
 **/.dockerignore
 
 # Large image files in frontend
-frontend/src/assets/*.jpg
-frontend/src/assets/*.jpeg
-frontend/src/assets/*.png
+
 frontend/src/assets/*.gif
 frontend/src/assets/*.svg
 

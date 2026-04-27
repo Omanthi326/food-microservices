@@ -4,7 +4,9 @@ let channel;
 
 export const connectRabbitMQ = async () => {
   try {
-    const connection = await amqp.connect(process.env.RABBITMQ_URL);
+    const connection = await amqp.connect(process.env.RABBITMQ_URL, {
+      rejectUnauthorized: false  // ← add this for CloudAMQP SSL
+    });
     channel = await connection.createChannel();
     await channel.assertQueue("order_updates", { durable: true });
     console.log("✅ RabbitMQ connected in Payment Service");
