@@ -60,8 +60,8 @@ const Dashboard = () => {
                 updateData.deliveryStatus = deliveryStatus;
             }
 
-            const response = await axios.put(
-                `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/order/${orderId}`,
+           const response = await axios.put(
+                `https://api-gateway-production-8d60.up.railway.app/order/${orderId}`,
                 updateData,
                 {
                     headers: {
