@@ -1,33 +1,39 @@
 import amqp from "amqplib";
 
 let channel;
+let connection;
 
 export const connectRabbitMQ = async () => {
   try {
-    // For CloudAMQP - use this format
-    const connection = await amqp.connect(
-      process.env.RABBITMQ_URL || "amqp://localhost",
-      { 
-        heartbeat: 60,
-        rejectUnauthorized: false
-      }
-    );
+    console.log("🔄 Connecting to CloudAMQP...");
+
+    const url = process.env.RABBITMQ_URL;
+    
+    // For CloudAMQP TLS connection
+    connection = await amqp.connect(url, {
+      rejectUnauthorized: false,
+      heartbeat: 60
+    });
 
     connection.on("error", (err) => {
-      console.error("❌ RabbitMQ connection error:", err.message);
+      console.error("❌ Connection error:", err.message);
+      channel = null;
       setTimeout(connectRabbitMQ, 5000);
     });
 
     connection.on("close", () => {
-      console.error("❌ RabbitMQ connection closed, reconnecting...");
+      console.log("🔄 Reconnecting...");
+      channel = null;
       setTimeout(connectRabbitMQ, 5000);
     });
 
     channel = await connection.createChannel();
     await channel.assertQueue("order_updates", { durable: true });
-    console.log("✅ RabbitMQ connected successfully!");
+    console.log("✅ CloudAMQP connected successfully!");
+
   } catch (error) {
-    console.error("❌ RabbitMQ connection error:", error.message);
+    console.error("❌ RabbitMQ error:", error.message);
+    channel = null;
     setTimeout(connectRabbitMQ, 5000);
   }
 };
@@ -40,10 +46,9 @@ export const publishOrderUpdate = async (orderData) => {
       Buffer.from(JSON.stringify(orderData)),
       { persistent: true }
     );
-    console.log("📤 Order published to queue:", orderData.orderId);
+    console.log("📤 Order published:", orderData.orderId);
   } catch (error) {
     console.error("❌ Failed to publish:", error.message);
     channel = null;
-    setTimeout(connectRabbitMQ, 5000);
   }
 };
