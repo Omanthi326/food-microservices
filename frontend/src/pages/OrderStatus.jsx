@@ -29,7 +29,7 @@ const OrderStatus = () => {
         try {
             const searchTerm = searchValue.trim();
             console.log('Searching for:', searchTerm);
-            const url = `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/order/lookup?q=${encodeURIComponent(searchTerm)}`;
+            const url = `https://api-gateway-production-8d60.up.railway.app/order/lookup?q=${encodeURIComponent(searchTerm)}`;
             console.log('Request URL:', url);
             
             const response = await axios.get(url);
