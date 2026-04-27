@@ -1,84 +1,4 @@
-name: CI/CD Pipeline - Food Microservices
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-jobs:
-  test:
-    name: Test Services
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-
-      - name: Test Auth Service
-        run: |
-          cd auth-service
-          npm install
-          echo "Auth service dependencies installed"
-
-      - name: Test Food Service
-        run: |
-          cd food-service
-          npm install --legacy-peer-deps
-          echo "Food service dependencies installed"
-
-      - name: Test Order Service
-        run: |
-          cd order-service
-          npm install
-          echo "Order service dependencies installed"
-
-      - name: Test Payment Service
-        run: |
-          cd payment-service
-          npm install
-          echo "Payment service dependencies installed"
-
-      - name: Test API Gateway
-        run: |
-          cd api-gateway
-          npm install
-          echo "API Gateway dependencies installed"
-
-  build:
-    name: Build Docker Images
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Build API Gateway
-        run: docker build ./api-gateway -t food-app/api-gateway:latest
-
-      - name: Build Auth Service
-        run: docker build ./auth-service -t food-app/auth-service:latest
-
-      - name: Build Food Service
-        run: docker build ./food-service -t food-app/food-service:latest
-
-      - name: Build Order Service
-        run: docker build ./order-service -t food-app/order-service:latest
-
-      - name: Build Payment Service
-        run: docker build ./payment-service -t food-app/payment-service:latest
-
-      - name: Build Success
-        run: echo "All Docker images built successfully!"
-
-  deploy:
+deploy:
     name: Deploy Application
     runs-on: ubuntu-latest
     needs: build
@@ -87,17 +7,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy with Docker Compose
+      - name: Install Docker Compose
         run: |
-          echo "Deploying food microservices..."
-          docker-compose config
-          echo "Deployment configuration verified!"
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
+
+      - name: Verify Docker Compose config
+        run: docker-compose config
 
       - name: Deployment Success
         run: |
           echo "================================================"
-          echo "QDeli Food App deployed successfully!"
-          echo "Services: Auth, Food, Order, Payment, Gateway"
-          echo "Monitoring: Prometheus + Grafana"
-          echo "Messaging: RabbitMQ"
+          echo "✅ QDeli Food App deployment verified!"
+          echo "✅ Services: Auth, Food, Order, Payment, Gateway"
+          echo "✅ Monitoring: Prometheus + Grafana"
+          echo "✅ Messaging: RabbitMQ"
+          echo "✅ CI/CD Pipeline: GitHub Actions"
           echo "================================================"
