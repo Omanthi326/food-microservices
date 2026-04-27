@@ -1,0 +1,135 @@
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin123
+    networks:
+      - food-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "3000:3000"
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+    environment:
+      - PORT=3000
+      - AUTH_SERVICE=http://auth-service:3001
+      - FOOD_SERVICE=http://food-service:3002
+      - ORDER_SERVICE=http://order-service:3003
+      - PAYMENT_SERVICE=http://payment-service:3004
+    depends_on:
+      - auth-service
+      - food-service
+      - order-service
+      - payment-service
+    networks:
+      - food-network
+
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - MONGO_URI=mongodb+srv://omanthibandara326_db_user:UJ5bsnwxsS0MA1x5@cluster0.02l4pua.mongodb.net/auth_db
+      - JWT_SECRET=15Novemberauth-db
+    networks:
+      - food-network
+
+  food-service:
+    build: ./food-service
+    ports:
+      - "3002:3002"
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+    environment:
+      - PORT=3002
+      - MONGO_URI=mongodb+srv://omanthibandara326_db_user:UJ5bsnwxsS0MA1x5@cluster0.02l4pua.mongodb.net/food_db
+      - JWT_SECRET=15Novemberauth-db
+      - CLOUDINARY_CLOUD_NAME=dac0n6ujo
+      - CLOUDINARY_API_KEY=985697932455492
+      - CLOUDINARY_API_SECRET=oehVwE81R82Nd3DVkMdhijCDSNc
+    networks:
+      - food-network
+
+  order-service:
+    build: ./order-service
+    ports:
+      - "3003:3003"
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - PORT=3003
+      - MONGO_URI=mongodb+srv://omanthibandara326_db_user:UJ5bsnwxsS0MA1x5@cluster0.02l4pua.mongodb.net/order_db
+      - RABBITMQ_URL=amqp://admin:admin123@rabbitmq:5672
+      - JWT_SECRET=15Novemberauth-db
+    networks:
+      - food-network
+
+  payment-service:
+    build: ./payment-service
+    ports:
+      - "3004:3004"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - PORT=3004
+      - STRIPE_SECRET_KEY=sk_test_51S5rdx2ZeAJz5mMCVE4QYbLm7kApxIgMYP0GxJJkyxKG4CTazRo2Y0S8zSVyXrMNHrHtdwsYXhahlysYKvXZojii00HLEdKUA5
+      - STRIPE_WEBHOOK_SECRET=whsec_464fe5e8f552eccb0b0d16f6d5ac843958315388380c5cc99d57eead52bec7e6
+      - FRONTEND_URL=http://localhost:5173
+      - ORDER_SERVICE_URL=http://order-service:3003
+      - RABBITMQ_URL=amqp://admin:admin123@rabbitmq:5672
+    networks:
+      - food-network
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - food-network
+    depends_on:
+      - api-gateway
+      - auth-service
+      - food-service
+      - order-service
+      - payment-service
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3006:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+    networks:
+      - food-network
+    depends_on:
+      - prometheus
+
+networks:
+  food-network:
+    driver: bridge

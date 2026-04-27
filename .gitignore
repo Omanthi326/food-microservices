@@ -1,0 +1,40 @@
+# Dependencies
+**/node_modules
+
+# Environment files - NEVER push these!
+**/.env
+**/.env.local
+**/.env.production
+**/.env.development
+
+# Upload folders
+**/uploads
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+**/logs
+**/*.log
+npm-debug.log*
+
+# Build folders
+**/dist
+**/build
+
+# Docker
+**/.dockerignore
+
+# Large image files in frontend
+frontend/src/assets/*.jpg
+frontend/src/assets/*.jpeg
+frontend/src/assets/*.png
+frontend/src/assets/*.gif
+frontend/src/assets/*.svg
+
+# Secrets files
+k8s/secrets.yaml
+docker-compose.swarm.yml
+backend
+
