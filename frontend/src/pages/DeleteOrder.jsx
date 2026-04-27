@@ -24,7 +24,7 @@ const DeleteOrder = () => {
         setLoading(true);
 
         axios
-            .delete(`http://localhost:3000/order/${id}`, config)
+            .delete(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/order/${id}`, config)
             .then(() => {
                 setLoading(false);
                 enqueueSnackbar('Order deleted succesfully', {variant:'success'});

@@ -32,7 +32,7 @@ const EditFood = () => {
     useEffect(() => {
         setLoading(true);
         axios
-            .get(`http://localhost:3000/food/${id}`)
+            .get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/food/${id}`)
             .then((response) => {
                 const data = response.data;
                 setName(data.name);
@@ -68,7 +68,7 @@ const EditFood = () => {
         const data = { name, priceInCents };
         setLoading(true);
         axios
-            .put(`http://localhost:3000/food/${id}`, data, config)
+            .put(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/food/${id}`, data, config)
             .then(() => {
                 setLoading(false);
                 toast.success('Food edited successfully');

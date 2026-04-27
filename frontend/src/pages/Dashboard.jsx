@@ -20,8 +20,8 @@ const Dashboard = () => {
 
         // Fetch both orders and food items
         Promise.all([
-            axios.get('http://localhost:3000/order'),
-            axios.get('http://localhost:3000/food')
+            axios.get('${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/order'),
+            axios.get('${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/food')
         ])
             .then(([ordersResponse, foodResponse]) => {
                 setOrders(ordersResponse.data);
@@ -61,7 +61,7 @@ const Dashboard = () => {
             }
 
             const response = await axios.put(
-                `http://localhost:3000/order/${orderId}`,
+                `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/order/${orderId}`,
                 updateData,
                 {
                     headers: {

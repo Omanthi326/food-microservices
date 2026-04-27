@@ -25,7 +25,7 @@ const DeleteFood = () => {
         setLoading(true);
 
         axios
-            .delete(`http://localhost:3000/food/${id}`, config)
+            .delete(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/food/${id}`, config)
             .then(() => {
                 setLoading(false);
                 enqueueSnackbar('Food Deleted', {variant:'success'});

@@ -18,7 +18,7 @@ const Success = () => {
         try {
             console.log('Saving order to database:', postData);
             
-            const response = await fetch('http://localhost:3000/order', {
+            const response = await fetch('${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/order', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -88,7 +88,7 @@ const Success = () => {
         // Fallback to Stripe session for old flow
         const fetchSessionDetails = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/stripe/api/session/${session_id}`);
+                const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/stripe/api/session/${session_id}`);
                 if (!response.ok) {
                     throw new Error('Response was not ok');
                 }

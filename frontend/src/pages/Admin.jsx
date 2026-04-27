@@ -14,7 +14,7 @@ const Admin = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get('http://localhost:3000/food')
+      .get('${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/food')
       .then((response) => {
         setFood(response.data.data);
         setLoading(false);
