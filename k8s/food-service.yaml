@@ -16,6 +16,7 @@ spec:
       containers:
         - name: food-service
           image: food-microservices-food-service
+          imagePullPolicy: Never
           ports:
             - containerPort: 3002
           env:

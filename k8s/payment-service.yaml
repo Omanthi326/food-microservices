@@ -16,6 +16,7 @@ spec:
       containers:
         - name: payment-service
           image: food-microservices-payment-service
+          imagePullPolicy: Never
           ports:
             - containerPort: 3004
           env:
@@ -27,7 +28,11 @@ spec:
                   name: app-secrets
                   key: stripe-secret
             - name: RABBITMQ_URL
-              value: "amqp://admin:admin123@rabbitmq:5672"
+              value: "amqp://rabbitmq:5672"
+            - name: ORDER_SERVICE_URL
+              value: "http://order-service:3003"
+            - name: FRONTEND_URL
+              value: "http://localhost:5173"
 ---
 apiVersion: v1
 kind: Service

@@ -7,12 +7,10 @@ export const connectRabbitMQ = async () => {
   try {
     console.log("🔄 Connecting to CloudAMQP...");
 
-    const url = process.env.RABBITMQ_URL;
-    
-    // For CloudAMQP TLS connection
-    connection = await amqp.connect(url, {
+    connection = await amqp.connect(process.env.RABBITMQ_URL, {
       rejectUnauthorized: false,
-      heartbeat: 60
+      heartbeat: 60,
+      timeout: 10000
     });
 
     connection.on("error", (err) => {
@@ -29,7 +27,7 @@ export const connectRabbitMQ = async () => {
 
     channel = await connection.createChannel();
     await channel.assertQueue("order_updates", { durable: true });
-    console.log("✅ CloudAMQP connected successfully!");
+    console.log("✅ RabbitMQ connected in Payment Service");
 
   } catch (error) {
     console.error("❌ RabbitMQ error:", error.message);

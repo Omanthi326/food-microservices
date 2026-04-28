@@ -10,7 +10,8 @@ export const connectRabbitMQ = async () => {
 
     connection = await amqp.connect(process.env.RABBITMQ_URL, {
       rejectUnauthorized: false,
-      heartbeat: 60
+      heartbeat: 60,
+      timeout: 10000
     });
 
     connection.on("error", (err) => {
@@ -27,10 +28,9 @@ export const connectRabbitMQ = async () => {
 
     channel = await connection.createChannel();
     await channel.assertQueue("order_updates", { durable: true });
-    console.log("✅ CloudAMQP connected successfully!");
+    console.log("✅ RabbitMQ connected in Order Service");
     console.log("👂 Waiting for payment events...");
 
-    // ✅ THIS IS THE MISSING PART - consume messages!
     channel.consume("order_updates", async (msg) => {
       if (msg) {
         try {
